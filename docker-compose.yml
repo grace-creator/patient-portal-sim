@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:16
+    container_name: patient_db
+    environment:
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_USER: rootuser
+      POSTGRES_DB: rootdb
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: patient_backend
+    environment:
+      DB_USER: patient_user
+      DB_PASS: patient_pass
+      DB_NAME: patient_db
+      DB_HOST: db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
