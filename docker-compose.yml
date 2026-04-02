@@ -12,8 +12,7 @@ services:
       - "5432:5432"
 
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     container_name: patient_backend
     environment:
       DB_USER: patient_user
@@ -24,3 +23,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
+
+
+  frontend:
+    image: nginx:alpine
+    container_name: patient_frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
