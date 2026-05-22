@@ -3,9 +3,9 @@ services:
     image: postgres:16
     container_name: patient_db
     environment:
-      POSTGRES_PASSWORD: rootpass
-      POSTGRES_USER: rootuser
-      POSTGRES_DB: rootdb
+      POSTGRES_PASSWORD: patient_pass
+      POSTGRES_USER: patient_user
+      POSTGRES_DB: patient_db
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
