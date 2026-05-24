@@ -28,20 +28,39 @@
 </div>
 
 <script>
-    function mockLogin() {
-        const user = document.getElementById('username').value;
+    async function mockLogin() {
+        const username = document.getElementById('username').value.trim();
         const role = document.getElementById('role').value;
-        
-        if(!user) {
+
+        if (!username) {
             alert("Please enter a username.");
             return;
         }
 
-        // This is where we simulate the Week 3 Auth/Logging
-        console.log(`[AUDIT LOG] Access attempt by User: ${user} with Role: ${role}`);
-        alert(`Welcome, ${user}. Accessing portal as ${role}...`);
-        
-        // Next step will be connecting this to your FastAPI backend
+        try {
+            // Call your backend
+            const response = await fetch('http://192.168.1.164:8000/patients', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch patients');
+            }
+
+            const patients = await response.json();
+
+            console.log(`[AUDIT LOG] User ${username} logged in as ${role}`);
+            alert(`Welcome, ${username}!\nYou are logged in as ${role}.\n\nLoaded ${patients.length} patient records.`);
+
+            // TODO: Later we can show the actual patient list based on role
+
+        } catch (error) {
+            console.error(error);
+            alert("Error connecting to backend. Is the server running?");
+        }
     }
 </script>
 
