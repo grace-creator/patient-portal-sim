@@ -37,18 +37,18 @@
             return;
         }
 
-        console.log(`[DEBUG] Attempting login for user: ${username} as ${role}`);
-
         try {
-            const response = await fetch('http://192.168.1.164:8000/patients', {
+            console.log(`[DEBUG] Trying to fetch patients...`);
+
+            const response = await fetch('/patients', {   // ← Changed to relative URL
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 mode: 'cors'
             });
 
-            console.log(`[DEBUG] Response status: ${response.status} ${response.statusText}`);
+            console.log(`[DEBUG] Status: ${response.status}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -56,16 +56,15 @@
 
             const patients = await response.json();
 
-            console.log(`[AUDIT LOG] User ${username} logged in as ${role}`);
-            alert(`✅ Success!\nWelcome, ${username}!\nYou are logged in as ${role}.\n\nLoaded ${patients.length} patient records.`);
+            alert(`✅ Success!\nWelcome, ${username} (${role})\n\nLoaded ${patients.length} patients.`);
 
         } catch (error) {
-            console.error("[ERROR] Fetch failed:", error);
-            alert("Error connecting to backend: " + error.message + "\n\nCheck the browser console for details.");
+            console.error("Fetch error:", error);
+            alert("Connection failed: " + error.message);
         }
     }
 </script>    
- 
+
 
 </body>
 </html>
