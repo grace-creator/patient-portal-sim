@@ -38,9 +38,9 @@
         }
 
         try {
-            console.log(`[DEBUG] Trying to fetch patients...`);
+            console.log(`[DEBUG] Fetching from backend on port 8000...`);
 
-            const response = await fetch('/patients', {   // ← Changed to relative URL
+            const response = await fetch('http://192.168.1.164:8000/patients', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -56,14 +56,14 @@
 
             const patients = await response.json();
 
-            alert(`✅ Success!\nWelcome, ${username} (${role})\n\nLoaded ${patients.length} patients.`);
+            alert(`✅ Success!\nWelcome, ${username} (${role})\nLoaded ${patients.length} patient records.`);
 
         } catch (error) {
             console.error("Fetch error:", error);
             alert("Connection failed: " + error.message);
         }
     }
-</script>    
+</script>   
 
 
 </body>
