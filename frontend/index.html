@@ -37,32 +37,35 @@
             return;
         }
 
+        console.log(`[DEBUG] Attempting login for user: ${username} as ${role}`);
+
         try {
-            // Call your backend
             const response = await fetch('http://192.168.1.164:8000/patients', {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
-                }
+                    'Content-Type': 'application/json',
+                },
+                mode: 'cors'
             });
 
+            console.log(`[DEBUG] Response status: ${response.status} ${response.statusText}`);
+
             if (!response.ok) {
-                throw new Error('Failed to fetch patients');
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
             const patients = await response.json();
 
             console.log(`[AUDIT LOG] User ${username} logged in as ${role}`);
-            alert(`Welcome, ${username}!\nYou are logged in as ${role}.\n\nLoaded ${patients.length} patient records.`);
-
-            // TODO: Later we can show the actual patient list based on role
+            alert(`✅ Success!\nWelcome, ${username}!\nYou are logged in as ${role}.\n\nLoaded ${patients.length} patient records.`);
 
         } catch (error) {
-            console.error(error);
-            alert("Error connecting to backend. Is the server running?");
+            console.error("[ERROR] Fetch failed:", error);
+            alert("Error connecting to backend: " + error.message + "\n\nCheck the browser console for details.");
         }
     }
-</script>
+</script>    
+ 
 
 </body>
 </html>
