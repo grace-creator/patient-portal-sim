@@ -7,13 +7,15 @@ from .models import Patient
 
 app = FastAPI(title="Patient Portal Backend")
 
-# CORS - Must be the FIRST middleware
+# CORS - Very explicit and placed at the top
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"], 
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,
 )
 
 # Create tables
