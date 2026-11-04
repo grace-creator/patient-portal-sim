@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +29,14 @@
     <p class="audit-note">All access attempts are logged for HIPAA compliance.</p>
 </div>
 
+<div id="dashboard-card" style="display: none; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 400px;">
+    <h2>Patient Records</h2>
+    <p id="welcome-msg"></p>
+    <div id="patient-list"></div>
+    <button onclick="location.reload()" style="background-color: #666; margin-top: 15px;">Log Out</button>
+</div>
+
+
 <script>
     async function mockLogin() {
         const username = document.getElementById('username').value.trim();
@@ -38,17 +48,13 @@
         }
 
         try {
-            console.log(`[DEBUG] Fetching from backend on port 8000...`);
+            console.log(`[DEBUG] Fetching from backend...`);
 
             const response = await fetch('http://192.168.1.164:8000/patients', {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 mode: 'cors'
             });
-
-            console.log(`[DEBUG] Status: ${response.status}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -56,14 +62,37 @@
 
             const patients = await response.json();
 
-            alert(`✅ Success!\nWelcome, ${username} (${role})\nLoaded ${patients.length} patient records.`);
+            // Hide login card and show dashboard
+            document.querySelector('.login-card').style.display = 'none';
+            document.getElementById('dashboard-card').style.display = 'block';
+
+            // Set welcome message
+            document.getElementById('welcome-msg').innerText = `Welcome, ${username} (${role})`;
+
+            // Render patient records
+            const listContainer = document.getElementById('patient-list');
+            listContainer.innerHTML = ''; // clear previous
+
+            if (patients.length === 0) {
+                listContainer.innerHTML = '<p>No patient records found.</p>';
+            } else {
+                patients.forEach(p => {
+                    listContainer.innerHTML += `
+                        <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                            <strong>${p.first_name} ${p.last_name}</strong><br>
+                            <small>DOB: ${p.dob} | Note: ${p.note || 'None'}</small>
+                        </div>
+                    `;
+                });
+            }
 
         } catch (error) {
             console.error("Fetch error:", error);
             alert("Connection failed: " + error.message);
         }
     }
-</script>   
+</script>
+
 
 
 </body>
